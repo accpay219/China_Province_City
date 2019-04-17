@@ -76,6 +76,7 @@ public class MainGetData {
                     area.setCode(provinceCode);
                     areas.add(area);
                 }
+
                 //直辖市 城市和省份名称一样
                 if (provinceName.contains("北京") || provinceName.contains("上海") || provinceName.contains("天津") || provinceName.contains("重庆")) {
                     City city = new City();
@@ -96,27 +97,38 @@ public class MainGetData {
                         }
                     }
                 }
+
+
                 for (int j = 0; j < stringCode.size(); j++) {
                     String cityName = stringName.get(j);
                     String cityCode = stringCode.get(j);
                     //遍历获取地级市
-                    if (!cityCode.equals(provinceCode) && cityCode.startsWith(provinceCode.substring(0, 2)) && cityCode.endsWith("00")) {
+                    if (!cityCode.equals(provinceCode) && cityCode.startsWith(provinceCode.substring(0, 2))) {
                         City city = new City();
                         List<Area> areas = new ArrayList<Area>();
-                        city.setName(cityName);
-                        city.setCode(cityCode);
-                        city.setAreaList(areas);
-                        cities.add(city);
-                        //遍历获取县区
-                        for (int k = 0; k < stringCode.size(); k++) {
-                            String areaName = stringName.get(k);
-                            String areaCode = stringCode.get(k);
-                            if (!areaCode.equals(cityCode) && areaCode.startsWith(cityCode.substring(0, 4))) {
-                                Area area = new Area();
-                                area.setName(areaName);
-                                area.setCode(areaCode);
-                                areas.add(area);
+                        if (cityCode.endsWith("00")) {
+                            city.setName(cityName);
+                            city.setCode(cityCode);
+                            city.setAreaList(areas);
+                            cities.add(city);
+                            //遍历获取县区
+                            for (int k = 0; k < stringCode.size(); k++) {
+                                String areaName = stringName.get(k);
+                                String areaCode = stringCode.get(k);
+                                if (!areaCode.equals(cityCode) && areaCode.startsWith(cityCode.substring(0, 4))) {
+                                    Area area = new Area();
+                                    area.setName(areaName);
+                                    area.setCode(areaCode);
+                                    areas.add(area);
+                                }
                             }
+                        }
+                        //检索省辖市
+                        if (("9").equals(cityCode.substring(2,3))) {
+                            city.setName(cityName);
+                            city.setCode(cityCode);
+                            city.setAreaList(areas);
+                            cities.add(city);
                         }
                     }
                 }
